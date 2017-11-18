@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bomberman</title>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="app/js/vendor/three.js"></script>
+	<script type="text/javascript" src="app/js/app.js"></script>
+	<script type="text/javascript" src="app/js/libs/debug.js"></script>
+	<script type="text/javascript" src="app/js/libs/event.js"></script>
+	<script type="text/javascript" src="app/js/libs/renderer.js"></script>
+	<script type="text/javascript" src="app/js/libs/input.js"></script>
+	<script type="text/javascript" src="app/js/libs/entity.js"></script>
+	<script type="text/javascript" src="app/js/libs/walker.js"></script>
+	<script type="text/javascript" src="app/js/libs/bomb.js"></script>
+	<script type="text/javascript" src="app/js/libs/fire.js"></script>
+	<script type="text/javascript" src="app/js/libs/player.js"></script>
+	<script type="text/javascript" src="app/js/libs/map.js"></script>
+</head>
+
+<body onkeydown="Input.Keyboard.onKeyDown(event)" onkeyup="Input.Keyboard.onKeyUp(event)">
+<style>
+*{
+	margin: 0;
+	padding: 0;
+}
+html, body{
+	height: 100%;
+	font-family: arial;
+	font-size: 11px;
+}
+#main{
+	height: 90%;
+}
+.debug {
+	position: absolute;
+	border: 1px solid #000;
+	background-color: rgba(255, 255, 255, 0.2);
+	width: 100px;
+	padding: 16px;
+}
+</style>
+	<div id="debug_a" class="debug">
+		debug A
+	</div>
+
+	<div id="main">
+	
+	</div>
+	
+	
+	<script>
+		App.init();
+		
+		function updateRender() {
+			//Main.MUST_RENDER = true;
+		}
+	</script>
+	
+</body>
+</html>
