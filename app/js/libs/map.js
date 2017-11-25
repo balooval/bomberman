@@ -2,50 +2,124 @@
 
 class Map {
 	constructor() {
-		this.gridSize = 15;
-		this.startBlocs = [
-			[1, 1], 
-			[this.gridSize - 2, 1], 
-			[this.gridSize - 2, this.gridSize - 2], 
-			[1, this.gridSize - 2], 
-		]
-		this.grid = this.initGrid(this.gridSize);
-		this.grid = this.closeGrid(this.grid);
-		this.placeBlocs(this.grid);
-		this.placeBlocsAssets(this.grid);
-		this.blocs = [];
+		this.curLevel = 1;
+		this.grid = [];
+		this.gridDangers = [];
+		this.startBlocs = [];
+		// this.initGrids();
+		this.frameDangersUpdate = 0;
 		this.entities = {
 			walkers : [], 
 			bombs : [], 
+			bonus : [], 
 		}
+		this.evt = new Evt();
+		
+		// this.frameDangersUpdate = Renderer.getCurFrame() + 30;
+		// console.log('loadLevel', this.frameDangersUpdate);
+		// Renderer.evt.listen('RENDER_FRAME_' + this.frameDangersUpdate, this, this.calcDangers);
+	}
+	
+	loadLevel() {
+		this.initGrids();
+		this.frameDangersUpdate = Renderer.getCurFrame() + 30;
+		console.log('loadLevel', this.frameDangersUpdate);
+		Renderer.evt.listen('RENDER_FRAME_' + this.frameDangersUpdate, this, this.calcDangers);
+	}
+	
+	clear() {
+		console.log('clear', this.frameDangersUpdate);
+		Renderer.evt.removeEventListener('RENDER_FRAME_' + this.frameDangersUpdate, this, this.calcDangers);
+		this.entities.bombs.forEach(b => b.dispose());
+		this.entities.bonus.forEach(b => b.dispose());
+	}
+	
+	getPathCoord(_startCoord, _endCoord) {
+		return App.Ai.AStar.getPath(_startCoord, this.grid, 
+			_coord => (_coord[0] == _endCoord[0] && _coord[1] == _endCoord[1]), 
+			_node => _node.costPrev + this.getDangerAtCoord([_node.x, _node.y]) * 10
+		);
+	}
+	
+	getPathBlocType(_startCoord, _blocType) {
+		return App.Ai.AStar.getPath(_startCoord, this.grid, 
+			_coord => this.hasNeigbourgTypeOf(_coord, _blocType), 
+			_node => _node.costPrev + this.getDangerAtCoord([_node.x, _node.y]) * 10
+		);
+	}
+	
+	getPathToEntity(_startCoord, _type) {
+		return App.Ai.AStar.getPath(_startCoord, this.grid, 
+			_coord => this.getEntitysAtBloc(_type, _coord[0], _coord[1]).length > 0, 
+			_node => _node.costPrev + this.getDangerAtCoord([_node.x, _node.y]) * 10
+		);
+	}
+	
+	getPathSafe(_startCoord) {
+		return App.Ai.AStar.getPath(_startCoord, this.grid, 
+			_coord => this.getDangerAtCoord(_coord) == 0, 
+			_node => this.getDangerAtCoord([_node.x, _node.y])
+		);
+	}
+	
+	hasNeigbourgTypeOf(_coord, _blocType) {
+		var neigbour = [
+			[1, 0], 
+			[-1, 0], 
+			[0, 1], 
+			[0, -1], 
+		];
+		var typeOfNb = neigbour
+			.map(n => this.grid[_coord[1] + n[1]][_coord[0] + n[0]].type.typeId)
+			.filter(t => t == _blocType)
+			.length;
+		return typeOfNb > 0;
+	}
+	
+	
+	readMap() {
+		return App.Levels['Level_' + this.curLevel];
+	}
+	
+	onBombExplode(_bomb) {
+		this.evt.fireEvent('BOMB_EXPLODE');
 	}
 	
 	getStartBloc() {
-		return this.startBlocs.shift();
+		var coord = this.startBlocs.shift();
+		this.startBlocs.push(coord);
+		return coord;
 	}
 	
-	raycast(_startPos, _dir, _length) {
-		for (var y = 0; y <= _length[1]; y ++) {
-			for (var x = 0; x <= _length[0]; x ++) {
-				var curX = _startPos[0] + (x * _dir[0]);
-				var curY = _startPos[1] + (y * _dir[1]);
-				var value = this.grid[curY][curX];
-				if (value == 1) {
-					return [
-						_startPos[0], 
-						_startPos[1], 
-						curX, 
-						curY 
-					]
+	raycast(_startBloc, endBloc) {
+		var dirX = _startBloc[0] < endBloc[0] ? 1 : -1;
+		var dirY = _startBloc[1] < endBloc[1] ? 1 : -1;
+		var lenX = Math.abs(_startBloc[0] - endBloc[0]);
+		var lenY = Math.abs(_startBloc[1] - endBloc[1]);
+		var lastX = 0;
+		var lastY = 0;
+		var ray = new Ray(_startBloc[0], _startBloc[1], endBloc[0], endBloc[1]);
+		for (var y = 0; y <= lenY; y ++) {
+			for (var x = 0; x <= lenX; x ++) {
+				var curX = _startBloc[0] + (x * dirX);
+				var curY = _startBloc[1] + (y * dirY);
+				ray.impactedBloc = this.grid[curY][curX];
+				if (ray.impactedBloc === null) {
+					debugger;
 				}
+				if (ray.impactedBloc.blockFlame == true) {
+					return ray;
+				}
+				lastX = curX;
+				lastY = curY;
+				ray.setEnd(curX, curY);
 			}
 		}
-		return [
-			_startPos[0], 
-			_startPos[1], 
-			_startPos[0] + (_dir[0] * _length[0]), 
-			_startPos[1] + (_dir[1] * _length[1])
-		]
+		return ray;
+	}
+	
+	setFireOnBloc(_x, _y) {
+		
 	}
 	
 	addWalker(_walker) {
@@ -54,63 +128,113 @@ class Map {
 	
 	addBomb(_bomb) {
 		this.entities.bombs.push(_bomb);
+		// this.calcDangers();
 	}
 	
-	removeBomb(_bomb) {
-		this.entities.bombs.splice(this.entities.bombs.indexOf(_bomb), 1);
+	getDangerAtCoord(_coord) {
+		return this.gridDangers[_coord[1]][_coord[0]];
 	}
 	
-	getEntitiesInSquare(_entitieType, _square) {
-		var foundEntities = this.entities[_entitieType].filter(w => w.isInBlocSquare(_square));
+	calcDangers() {
+		Renderer.evt.removeEventListener('RENDER_FRAME_' + this.frameDangersUpdate, this, this.calcDangers);
+		this.gridDangers = this.gridDangers.map(col => col.map(bloc => 0));
+		this.entities.bombs.map(b => this.addDanger(b.blocPosition));
+		this.frameDangersUpdate = Renderer.getCurFrame() + 30;
+		console.log('calcDangers', this.frameDangersUpdate);
+		Renderer.evt.listen('RENDER_FRAME_' + this.frameDangersUpdate, this, this.calcDangers);
+	}
+	
+	addDanger(_coord) {
+		var rays = Ray.getRayCast(_coord, 5);
+		Ray.parseRays(rays, (x, y, dist) => {
+			this.setDangerBloc([x, y], 10 - 0);
+		});
+	}
+	
+	setDangerBloc(_coord, _value) {
+		var curValue = this.gridDangers[_coord[1]][_coord[0]];
+		this.gridDangers[_coord[1]][_coord[0]] = Math.max(curValue, _value);
+	}
+	
+	addBonus(_bonus) {
+		this.entities.bonus.push(_bonus);
+	}
+	
+	removeEntity(_type, _entity) {
+		this.entities[_type].splice(this.entities[_type].indexOf(_entity), 1);
+	}
+	
+	getEntitiesHitByRay(_entitieType, _ray) {
+		var foundEntities = this.entities[_entitieType].filter(w => w.isHitByRay(_ray));
 		return foundEntities;
 	}
 	
+	destroyBloc(_bloc) {
+		var blocX = _bloc.blocPosition[0];
+		var blocY = _bloc.blocPosition[1];
+		_bloc.destroy();
+	}
+	
 	isBlocAccessible(_x, _y) {
-		return this.grid[_y][_x] == 0;
+		return this.grid[_y][_x].cost === 0;
 	}
 	
-	placeBlocsAssets(_grid) {
-		_grid.forEach((row, y) => row.forEach((col, x) => {
-			if (_grid[y][x] == 1) {
-				var bloc = new Entity();
-				bloc.setBlocPosition(x, y);
-				bloc.setColor(0x5e706b);
-			}
-		}));
+	getEntitysAtBloc(_type, _x, _y) {
+		var entitysFound = this.entities[_type].filter(b => b.blocPosition[0] == _x && b.blocPosition[1] == _y);
+		return entitysFound;
 	}
 	
-	initGrid(_size) {
-		var grid = [];
-		for (var y = 0; y < _size; y ++) {
+	getSomeBonus() {
+		if (this.entities.bonus.length == 0) {
+			return null;
+		}
+		var index = Math.floor(Math.random() * this.entities.bonus.length);
+		return this.entities.bonus[index];
+	}
+	
+	initGrids() {
+		this.startBlocs = [];
+		this.grid = [];
+		this.gridDangers = [];
+		var datas = this.readMap();
+		for (var y = 0; y < datas.length; y ++) {
 			var row = [];
-			for (var x = 0; x < _size; x ++) {
-				row.push(0);
+			var dangers = [];
+			for (var x = 0; x < datas[y].length; x ++) {
+				dangers.push(0);
+				var bloc = null;
+				if (datas[y][x] == 'P') {
+					this.startBlocs.push([x, y]);
+					// datas[y][x] = ' ';
+					bloc = this.createBloc('ground', x, y);
+				}
+				if (datas[y][x] == 'X') {
+					bloc = this.createBloc('core', x, y);
+				} else if (datas[y][x] == 'O') {
+					bloc = this.createBloc('basic', x, y);
+					// bloc = this.createBloc('ground', x, y);
+				} else if (datas[y][x] == ' ') {
+					bloc = this.createBloc('ground', x, y);
+				}
+				if (bloc === null) {
+					console.warn('no bloc', datas[y][x]);
+				}
+				row.push(bloc);
 			}
-			grid.push(row);
+			this.grid.push(row);
+			this.gridDangers.push(dangers);
 		}
-		return grid;
 	}
 	
-	closeGrid(_grid) {
-		var gridSize = _grid.length;
-		for (var y = 0; y < gridSize; y ++) {
-			for (var x = 0; x < gridSize; x ++) {
-				if (y == 0 || y == gridSize - 1) {
-					_grid[y][x] = 1;
-				}
-				if (x == 0 || x == gridSize - 1) {
-					_grid[y][x] = 1;
-				}
-			}
-		}
-		return _grid;
+	removeBloc(_x, _y) {
+		this.grid[_y][_x] = this.createBloc('ground', _x, _y);
+		this.evt.fireEvent('BLOC_DESTROYED');
 	}
 	
-	placeBlocs(_grid) {
-		_grid.forEach((row, y) => row.forEach((col, x) => {
-			if (x % 2 == 0 && y % 2 == 0) {
-				_grid[y][x] = 1;
-			}
-		}));
+	createBloc(_type, _x, _y) {
+		var bloc = new Bloc(_type);
+		bloc.setBlocPosition(_x, _y);
+		bloc.setDirection([0, 0]);
+		return bloc;
 	}
 }

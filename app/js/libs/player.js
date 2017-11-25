@@ -1,71 +1,120 @@
 'use strict';
 
 class Player {
-	
-	constructor(_walker) {
-		this.walker = _walker;
-		this.keyMap = {
-			LEFT : 37, 
-			RIGHT : 39, 
-			UP : 38, 
-			DOWN : 40, 
-			DROP : 32, 
-		};
-		this.bindInputs(this.keyMap);
+	static getType(_id) {
+		var type = [
+			{
+				name : 'Player A', 
+				color : 0xbf972a, 
+			}, 
+			{
+				name : 'Player B', 
+				color : 0xff0000, 
+			}, 
+			{
+				name : 'Player C', 
+				color : 0x0000FF, 
+			}, 
+			{
+				name : 'Player D', 
+				color : 0xffff00, 
+			}, 
+		];
+		return type[_id];
 	}
 	
-	setwalker(_walker) {
-		this.walker.accel[0] = 0;
-		this.walker.accel[1] = 0;
+	constructor(_walker, _id) {
+		this.uid = this.generateUid();
 		this.walker = _walker;
+		var type = Player.getType(_id);
+		this.name = type.name;
+		this.walker.evt.listen('TAKE_DAMAGE', this, this.onWalkerIsDamaged);
+		this.walker.setColor(type.color);
+		this.buttonsState = {
+			left : 0, 
+			right : 0, 
+			up : 0, 
+			down : 0, 
+		}
 	}
 	
-	bindInputs(_keyMap) {
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.DROP, this, this.onPressDrop);
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.LEFT, this, this.onPressLeft);
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.RIGHT, this, this.onPressRight);
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.DOWN, this, this.onPressDown);
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.UP, this, this.onPressUp);
-		Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.LEFT, this, this.onReleaseLeft);
-		Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.RIGHT, this, this.onReleaseRight);
-		Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.DOWN, this, this.onReleaseDown);
-		Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.UP, this, this.onReleaseUp);
+	generateUid() {
+		var uid = '';
+		for (var i = 0; i < 4; i ++) {
+			uid += Math.floor((1 + Math.random()) * 0x10000).toString(16);
+		}
+		return uid;
+	}
+	
+	onWalkerIsDamaged() {
+		this.kill();
+	}
+	
+	kill() {
+		// return false:
+		this.walker.dispose();
+		App.killPlayer(this);
+		this.dispose();
 	}
 	
 	onPressDrop() {
-		this.walker.drop();
+		this.walker.dropBomb();
 	}
 	
 	onPressLeft() {
-		this.walker.speed[0] -= 1;
+		if (this.updateButton('left', 1)) {
+			this.walker.speed[0] -= 1;
+		}
 	}
 	
 	onPressRight() {
-		this.walker.speed[0] += 1;
+		if (this.updateButton('right', 1)) {
+			this.walker.speed[0] += 1;
+		}
 	}
 	
 	onPressDown() {
-		this.walker.speed[1] += 1;
+		if (this.updateButton('down', 1)) {
+			this.walker.speed[1] += 1;
+		}
 	}
 	
 	onPressUp() {
-		this.walker.speed[1] -= 1;
+		if (this.updateButton('up', 1)) {
+			this.walker.speed[1] -= 1;
+		}
 	}
 	
 	onReleaseLeft() {
-		this.walker.speed[0] += 1;
+		if (this.updateButton('left', 0)) {
+			this.walker.speed[0] += 1;
+		}
 	}
 	
 	onReleaseRight() {
-		this.walker.speed[0] -= 1;
+		if (this.updateButton('right', 0)) {
+			this.walker.speed[0] -= 1;
+		}
 	}
 	
 	onReleaseDown() {
-		this.walker.speed[1] -= 1;
+		if (this.updateButton('down', 0)) {
+			this.walker.speed[1] -= 1;
+		}
 	}
 	
 	onReleaseUp() {
-		this.walker.speed[1] += 1;
+		if (this.updateButton('up', 0)) {
+			this.walker.speed[1] += 1;
+		}
+	}
+	
+	updateButton(_btn, _state) {
+		if (this.buttonsState[_btn] === _state) {
+			return false;
+		}
+		this.buttonsState[_btn] = _state;
+		return true;
 	}
 	
 }

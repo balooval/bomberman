@@ -1,0 +1,22 @@
+'use strict';
+
+var App = (function(_app){
+	var mute = true;
+	
+	var api = {
+		play : function(_id) {
+			if (mute) {
+				return false;
+			}
+			App.Assets.Sounds.get(_id).play();
+		}, 
+		
+		playOne : function(listId) {
+			var index = Math.floor(Math.random() * listId.length);
+			api.play(listId[index]);
+		}, 
+	};
+	
+	_app.Sound = api;
+	return _app;
+})(App || {});

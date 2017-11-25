@@ -73,6 +73,8 @@ Input.Keyboard = (function(){
 
 			} else if (key == 71) { // g
 			
+			} else if (key == 75) { // k
+			
 			} else if (key == 76) { // l
 
 			} else if (key == 79) { // o

@@ -1,89 +1,53 @@
 'use strict';
 
-class Entity {
+class Entity extends BaseEntity {
 	
 	constructor(material, geometry) {
-		this.positionToRenderRatio = 4;
-		this.screenOffset = [-30, -30];
-		this.blocPosition = [0, 0];
-		this.position = [3, 3];
-		this.mesh = null;
+		super();
+		this.screenOffset = [-34, -30];
 		var geometrySize = 4;
 		this.geometry = geometry || new THREE.BoxBufferGeometry(geometrySize, geometrySize, geometrySize, 1, 1, 1);
 		this.material = material || new THREE.MeshBasicMaterial({color:0xbf972a});
 		this.buildMesh();
-		Renderer.addEntity(this);
-		Renderer.evt.listen('RENDER', this, this.onRender);
+		this.onConstructed();
 	}
 	
-	getPositionFromBloc(_x, _y) {
-		var half = App.blocSize / 2;
-		return [
-			_x * App.blocSize + half, 
-			_y * App.blocSize + half, 
-		]
+	setModel(_model) {
+		// var tmpBuffGeo = App.Assets.Models.get(_model).geometry.clone();
+		// var tmpGeo = new THREE.Geometry().fromBufferGeometry(tmpBuffGeo);
+		var tmpGeo = App.Assets.Models.get(_model).clone();
+		this.mesh.geometry = tmpGeo;
 	}
 	
-	getBlocFromPosition(_x, _y) {
-		return [
-			Math.floor(_x / App.blocSize), 
-			Math.floor(_y / App.blocSize), 
-		]
+	setSize(_w, _h, _d) {
+		var size = 0.4;
+		this.mesh.scale.x = _w * size;
+		this.mesh.scale.y = _h * size;
+		this.mesh.scale.z = _d * size;
 	}
 	
-	isInBlocSquare(_square) {
-		if (this.blocPosition[0] < _square[0]) {
-			return false;
-		}
-		if (this.blocPosition[0] > _square[2]) {
-			return false;
-		}
-		if (this.blocPosition[1] < _square[1]) {
-			return false;
-		}
-		if (this.blocPosition[1] > _square[3]) {
-			return false;
-		}
-		return true;
+	setAlpha(_value) {
+		this.material.opacity = _value;
 	}
 	
-	setSize(_w, _h) {
-		this.mesh.scale.x = _w;
-		this.mesh.scale.y = _h;
-	}
-	
-	setColor(_color) {
-		this.mesh.material.color = new THREE.Color(_color);
-	}
-	
-	setLayer(_layer) {
-		this.mesh.position.y = _layer;
-	}
-	
-	setBlocPosition(_x, _y) {
-		this.position = this.getPositionFromBloc(_x, _y);
-		this.updatePosition();
-	}
-	
-	updatePosition() {
-		this.blocPosition = this.getBlocFromPosition(this.position[0], this.position[1]);
-		this.mesh.position.x = (this.position[0] + this.screenOffset[0]);
-		this.mesh.position.z = (this.position[1] + this.screenOffset[1]);
-		// console.log(this.mesh.position.x + ' ' + this.mesh.position.z);
+	setRotation(_x, _y, _z) {
+		this.mesh.rotation.set(_x, _y, _z);
 	}
 	
 	buildMesh() {
-		this.mesh = new THREE.Mesh(this.geometry, this.material);
-		this.mesh.rotation.x = Math.PI / -2;
+		
+		// var tmpBuffGeo = App.Assets.Models.get('bloc').geometry.clone();
+		// var tmpGeo = new THREE.Geometry().fromBufferGeometry(tmpBuffGeo);
+		var tmpGeo = App.Assets.Models.get('bloc').clone();
+		this.mesh = new THREE.Mesh(tmpGeo, this.material);
+		
+		
+		this.setSize(1, 1, 1);
+		
+		// this.mesh = new THREE.Mesh(this.geometry, this.material);
+		// this.mesh.rotation.x = Math.PI / -2;
 		this.updatePosition();
 	}
 	
-	onRender(_evt) {
-		// Debug.set('debug_a', 'ok debug');
-	}
-	
-	dispose() {
-		Renderer.removeEntity(this);
-	}
 }
 

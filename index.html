@@ -3,50 +3,62 @@
 <head>
 	<title>Bomberman</title>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="app/css/styles.css" type="text/css" />
 	<script type="text/javascript" src="app/js/vendor/three.js"></script>
+	<script type="text/javascript" src="app/js/vendor/howler.core.min.js"></script>
 	<script type="text/javascript" src="app/js/app.js"></script>
-	<script type="text/javascript" src="app/js/libs/debug.js"></script>
 	<script type="text/javascript" src="app/js/libs/event.js"></script>
 	<script type="text/javascript" src="app/js/libs/renderer.js"></script>
 	<script type="text/javascript" src="app/js/libs/input.js"></script>
+	<script type="text/javascript" src="app/js/libs/ui/ui.js"></script>
+	<script type="text/javascript" src="app/js/libs/ui/modal.js"></script>
+	<script type="text/javascript" src="app/js/libs/pool.js"></script>
+	<script type="text/javascript" src="app/js/libs/base-entity.js"></script>
 	<script type="text/javascript" src="app/js/libs/entity.js"></script>
+	<script type="text/javascript" src="app/js/libs/sprite.js"></script>
 	<script type="text/javascript" src="app/js/libs/walker.js"></script>
 	<script type="text/javascript" src="app/js/libs/bomb.js"></script>
+	<script type="text/javascript" src="app/js/libs/blast.js"></script>
 	<script type="text/javascript" src="app/js/libs/fire.js"></script>
 	<script type="text/javascript" src="app/js/libs/player.js"></script>
+	<script type="text/javascript" src="app/js/libs/human.js"></script>
+	<script type="text/javascript" src="app/js/libs/bot.js"></script>
 	<script type="text/javascript" src="app/js/libs/map.js"></script>
+	<script type="text/javascript" src="app/js/libs/bloc.js"></script>
+	<script type="text/javascript" src="app/js/libs/bonus.js"></script>
+	<script type="text/javascript" src="app/js/libs/ray.js"></script>
+	<script type="text/javascript" src="app/js/libs/light.js"></script>
+	<script type="text/javascript" src="app/js/libs/tween.js"></script>
+	<script type="text/javascript" src="app/js/libs/genetic/genetic.js"></script>
+	<script type="text/javascript" src="app/js/libs/ai/persona.js"></script>
+	<script type="text/javascript" src="app/js/libs/ai/incentive.js"></script>
+	<script type="text/javascript" src="app/js/libs/ai/incentiveSafe.js"></script>
+	<script type="text/javascript" src="app/js/libs/ai/incentiveAttack.js"></script>
+	<script type="text/javascript" src="app/js/libs/ai/incentiveExplore.js"></script>
+	<script type="text/javascript" src="app/js/libs/ai/incentiveBonus.js"></script>
+	<script type="text/javascript" src="app/js/libs/ai/astar.js"></script>
+	<script type="text/javascript" src="app/js/libs/sound.js"></script>
+	<script type="text/javascript" src="app/js/libs/assets-config.js"></script>
+	<script type="text/javascript" src="app/js/libs/net/loaderModel.js"></script>
+	<script type="text/javascript" src="app/js/libs/net/loaderTexture.js"></script>
+	<script type="text/javascript" src="app/js/libs/net/loaderSound.js"></script>
+	<script type="text/javascript" src="app/js/levels/level-1.js"></script>
+	<script type="text/javascript" src="app/js/levels/level-2.js"></script>
 </head>
 
 <body onkeydown="Input.Keyboard.onKeyDown(event)" onkeyup="Input.Keyboard.onKeyUp(event)">
-<style>
-*{
-	margin: 0;
-	padding: 0;
-}
-html, body{
-	height: 100%;
-	font-family: arial;
-	font-size: 11px;
-}
-#main{
-	height: 90%;
-}
-.debug {
-	position: absolute;
-	border: 1px solid #000;
-	background-color: rgba(255, 255, 255, 0.2);
-	width: 100px;
-	padding: 16px;
-}
-</style>
-	<div id="debug_a" class="debug">
-		debug A
-	</div>
 
 	<div id="main">
 	
 	</div>
 	
+	<div id="container-ui" class="ui">
+		
+	</div>
+	
+	<div id="ui-modal">
+		
+	</div>
 	
 	<script>
 		App.init();
