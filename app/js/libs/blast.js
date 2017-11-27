@@ -41,6 +41,12 @@ class Blast extends Entity{
 		this.dispose();
 	}
 	
+	buildMesh() {
+		super.buildMesh();
+		this.mesh.castShadow = false;
+		this.mesh.receiveShadow = false;
+	}
+	
 	dispose() {
 		Renderer.evt.removeEventListener('RENDER', this, this.onRender);
 		this.tween.evt.removeEventListener('END', this, this.onScaleEnd);

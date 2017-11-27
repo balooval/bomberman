@@ -15,6 +15,9 @@ var App = (function(_app){
 		}, 
 		
 		get : function(_id) {
+			if (!textLoaded[_id]) {
+				return null;
+			}
 			return textLoaded[_id];
 		}, 
 		

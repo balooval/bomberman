@@ -17,7 +17,11 @@ var App = (function(_app){
 			id : 'bloc', 
 			url : modelsPath + 'bloc-base.json', 
 		},
-{
+		{
+			id : 'rock', 
+			url : modelsPath + 'rock.json', 
+		},
+		{
 			id : 'blast', 
 			url : modelsPath + 'blast.json', 
 		}, 		
@@ -41,6 +45,10 @@ var App = (function(_app){
 		{
 			id : 'default', 
 			url : texturesPath + 'default.png', 
+		}, 
+		{
+			id : 'rock', 
+			url : texturesPath + 'rock.png', 
 		}, 
 		{
 			id : 'bloc', 

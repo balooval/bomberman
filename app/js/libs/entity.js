@@ -36,16 +36,17 @@ class Entity extends BaseEntity {
 	
 	buildMesh() {
 		
-		// var tmpBuffGeo = App.Assets.Models.get('bloc').geometry.clone();
-		// var tmpGeo = new THREE.Geometry().fromBufferGeometry(tmpBuffGeo);
-		var tmpGeo = App.Assets.Models.get('bloc').clone();
-		this.mesh = new THREE.Mesh(tmpGeo, this.material);
+		var bufferGeometry = App.Assets.Models.get('bloc').clone();
+		const geometry = new THREE.Geometry().fromBufferGeometry(bufferGeometry);
+		geometry.computeFaceNormals();              
+		geometry.mergeVertices()
+		geometry.computeVertexNormals();
+		this.mesh = new THREE.Mesh(geometry, this.material);
 		
+		this.mesh.castShadow = true;
+		this.mesh.receiveShadow = true;
 		
 		this.setSize(1, 1, 1);
-		
-		// this.mesh = new THREE.Mesh(this.geometry, this.material);
-		// this.mesh.rotation.x = Math.PI / -2;
 		this.updatePosition();
 	}
 	

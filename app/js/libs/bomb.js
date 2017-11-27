@@ -10,12 +10,16 @@ class Bomb extends Entity{
 	}
 	
 	constructor(_flameSize = 3) {
-		// var material = new THREE.MeshStandardMaterial();
 		var material = null;
-		super(material, new THREE.SphereBufferGeometry(2, 8, 8 ));
+		material = new THREE.MeshStandardMaterial({
+			color : 0x514061, 
+			metalness : 0.8, 
+			roughness : 0.2, 
+		});
+		super(material);
 		this.setLayer(Renderer.layers.hazard);
 		this.setModel('bomb');
-		this.setColor(0x03001b);
+		// this.setColor(0x03001b);
 		this.setRotation(0, Math.random() * 3, 0);
 		this.timeToLive = 120;
 		this.explodeFrame = 0;
@@ -96,10 +100,8 @@ class Bomb extends Entity{
 			return false;
 		}
 		App.Sound.playOne(Bomb.getSounds());
-		// var blast = new Blast();
-		var blast = App.Pool.get('blast');
-		blast.setBlocPosition(this.blocPosition[0], this.blocPosition[1]);
-		blast.start();
+		
+		// this.addBlast();
 		App.map.removeEntity('bombs', this);
 		var rays = Ray.getRayCast(this.blocPosition, this.damageBlocsDistance);
 		var walkerHited = this.getEntitiesHited('walkers', rays);
@@ -118,6 +120,12 @@ class Bomb extends Entity{
 		
 		App.map.onBombExplode(this);
 		this.dispose();
+	}
+	
+	addBlast() {
+		var blast = App.Pool.get('blast');
+		blast.setBlocPosition(this.blocPosition[0], this.blocPosition[1]);
+		blast.start();
 	}
 	
 	getEntitiesHited(_entitieType, _rays) {

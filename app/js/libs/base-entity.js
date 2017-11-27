@@ -65,6 +65,7 @@ class BaseEntity {
 	
 	setAltitude(_value) {
 		this.altitude = _value;
+		this.updatePosition();
 	}
 	
 	setBlocPosition(_x, _y) {

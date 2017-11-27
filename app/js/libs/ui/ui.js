@@ -5,10 +5,15 @@ var App = (function(_app){
 	var api = {
 		
 		init : function() {
-			// App.evt.listen('PLAYER_ADDED', api, api.onPlayerAdded);
-			// App.evt.listen('PLAYER_KILLED', api, api.onPlayerKilled);
+			App.evt.listen('PLAYER_ADDED', api, api.onPlayerAdded);
+			App.evt.listen('PLAYER_KILLED', api, api.onPlayerKilled);
+			App.evt.listen('GAME_OVER', api, api.onGameOver);
 			App.evt.listen('GAME_PAUSE_CHANGED', api, api.onPauseChanged);
 			App.UI.Modal.init();
+		}, 
+		
+		onGameOver : function() {
+			document.querySelectorAll('.container-player').forEach(e => e.remove());
 		}, 
 		
 		onPauseChanged : function(_state) {

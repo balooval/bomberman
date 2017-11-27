@@ -30,7 +30,6 @@ var Renderer = (function(){
 			elmt = _elmt;
 			api.evt = new Evt();
 			myRenderer = new THREE.WebGLRenderer();
-			// myRenderer.setClearColor(0xaec8e2);
 			myRenderer.setClearColor(0xd06fa4);
 			elmt.appendChild(myRenderer.domElement);
 			window.onresize = onResize;
@@ -42,8 +41,11 @@ var Renderer = (function(){
 			camera.lookAt(grid.position);
 			scene = new THREE.Scene();
 			scene.add(camera);
-			// scene.add(grid);
 			onResize();
+			
+			myRenderer.shadowMap.enabled = true;
+			myRenderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+
 		}, 
 		
 		play : function() {

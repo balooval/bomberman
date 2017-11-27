@@ -6,13 +6,15 @@ class Walker extends Entity{
 		material = new THREE.MeshStandardMaterial({
 			map : App.Assets.Textures.get('walker'),
 			color : 0xffffff, 
-			metalness : 0, 
-			roughness : 1, 
+			metalness : 0.0, 
+			roughness : 0.9, 
 		});
 		super(material, new THREE.SphereBufferGeometry(2, 8, 8 ));
 		this.setLayer(Renderer.layers.player);
 		this.setModel('walker');
-		// this.setTexture('walker');
+		this.setTexture('walker');
+		var scale = 0.8;
+		this.setSize(scale, scale, scale);
 		var startBloc = App.map.getStartBloc();
 		this.setBlocPosition(startBloc[0], startBloc[1]);
 		this.dropDelay = 10;
@@ -23,7 +25,25 @@ class Walker extends Entity{
 		this.bombCapacity = 5;
 		this.bombFlameSize = 2;
 		this.pushBomb = this.doNothing;
+		this.floatTarget = [0, 0.6];
+		this.tween = new App.Animation.Tween(0);
+		this.tween.evt.listen('END', this, this.switchFloating);
+		this.switchFloating();
 		Renderer.evt.listen('RENDER', this, this.onRender);
+	}
+	
+	switchFloating() {
+		// console.log('switchFloating');
+		var nextFloat = this.floatTarget.pop();
+		this.floatTarget.unshift(nextFloat);
+		this.tween.setTargetValue(nextFloat, 40);
+	}
+	
+	onRender(_evt) {
+		super.onRender(_evt);
+		this.move(this.speed[0] / this.speedReducer, this.speed[1] / this.speedReducer);
+		var alt = this.tween.getValueAtTime(Renderer.getCurFrame());
+		this.setAltitude(alt);
 	}
 	
 	takeDamage() {
@@ -143,11 +163,6 @@ class Walker extends Entity{
 	
 	takeBonus(_bonus) {
 		_bonus.apply(this);
-	}
-	
-	onRender(_evt) {
-		super.onRender(_evt);
-		this.move(this.speed[0] / this.speedReducer, this.speed[1] / this.speedReducer);
 	}
 	
 	dispose() {

@@ -5,19 +5,19 @@ class Player {
 		var type = [
 			{
 				name : 'Player A', 
-				color : 0xbf972a, 
+				color : 0x9bff9b, 
 			}, 
 			{
 				name : 'Player B', 
-				color : 0xff0000, 
+				color : 0xff9b9b, 
 			}, 
 			{
 				name : 'Player C', 
-				color : 0x0000FF, 
+				color : 0x9b9bFF, 
 			}, 
 			{
 				name : 'Player D', 
-				color : 0xffff00, 
+				color : 0xffff9b, 
 			}, 
 		];
 		return type[_id];

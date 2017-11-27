@@ -2,7 +2,7 @@
 
 class Map {
 	constructor() {
-		this.curLevel = 1;
+		this.curLevel = 2;
 		this.grid = [];
 		this.gridDangers = [];
 		this.startBlocs = [];
@@ -140,7 +140,7 @@ class Map {
 		this.gridDangers = this.gridDangers.map(col => col.map(bloc => 0));
 		this.entities.bombs.map(b => this.addDanger(b.blocPosition));
 		this.frameDangersUpdate = Renderer.getCurFrame() + 30;
-		console.log('calcDangers', this.frameDangersUpdate);
+		// console.log('calcDangers', this.frameDangersUpdate);
 		Renderer.evt.listen('RENDER_FRAME_' + this.frameDangersUpdate, this, this.calcDangers);
 	}
 	
