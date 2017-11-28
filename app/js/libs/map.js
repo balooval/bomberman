@@ -15,9 +15,26 @@ class Map {
 		}
 		this.evt = new Evt();
 		
-		// this.frameDangersUpdate = Renderer.getCurFrame() + 30;
-		// console.log('loadLevel', this.frameDangersUpdate);
-		// Renderer.evt.listen('RENDER_FRAME_' + this.frameDangersUpdate, this, this.calcDangers);
+		var material = new THREE.MeshStandardMaterial({
+			map : App.Assets.Textures.get('rock'),
+			color : 0xffffff, 
+			metalness : 0, 
+			roughness : 1, 
+		});
+		this.wallsEntity = new Entity(material);
+		this.wallsEntity.setBlocPosition(0, 0);
+		var scale = 1 / 0.4;
+		this.wallsEntity.setSize(scale, scale, scale);
+		
+		material = new THREE.MeshStandardMaterial({
+			color : 0xffe6e4, 
+			metalness : 0, 
+			roughness : 1, 
+		});
+		this.groundEntity = new Entity(material);
+		this.groundEntity.setBlocPosition(0, 0);
+		var scale = 1 / 0.4;
+		this.groundEntity.setSize(scale, scale, scale);
 	}
 	
 	loadLevel() {
@@ -170,8 +187,6 @@ class Map {
 	}
 	
 	destroyBloc(_bloc) {
-		var blocX = _bloc.blocPosition[0];
-		var blocY = _bloc.blocPosition[1];
 		_bloc.destroy();
 	}
 	
@@ -232,9 +247,6 @@ class Map {
 	}
 	
 	createBloc(_type, _x, _y) {
-		var bloc = new Bloc(_type);
-		bloc.setBlocPosition(_x, _y);
-		bloc.setDirection([0, 0]);
-		return bloc;
+		return new Bloc(_type, _x, _y);
 	}
 }

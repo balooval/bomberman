@@ -1,6 +1,6 @@
 'use strict';
 
-class Bloc extends Entity{
+class Bloc{
 	
 	static getType(_type) {
 		var types = {
@@ -42,30 +42,43 @@ class Bloc extends Entity{
 		return types[_type];
 	}
 	
-	constructor(_type) {
+	constructor(_type, _x, _y) {
 		var type = Bloc.getType(_type);
-		var material = null;
-		material = new THREE.MeshStandardMaterial({
+		this.blockFlame = type.blockFlame;
+		this.coord = [_x, _y];
+		var material = new THREE.MeshStandardMaterial({
 			map : App.Assets.Textures.get(type.texture),
 			color : 0xffffff, 
 			metalness : 0, 
 			roughness : 1, 
 		});
-		
-		super(material);
+		this.entity = new Entity(material);
 		this.type = type;
 		if (type.typeId == 1) {
 			var angle = Math.PI / 2;
 			var nb = Math.random() * 4
 			var rot = angle * Math.floor(nb);
-			this.setRotation(0, rot, 0);
+			this.entity.setRotation(0, rot, 0);
 		}
-		this.blockFlame = type.blockFlame;
 		this.cost = type.cost;
-		this.setLayer(Renderer.layers.background);
-		this.setColor(this.type.color);
-		this.setSize(1, this.type.height, 1);
-		this.setModel(this.type.model);
+		this.entity.setBlocPosition(this.coord[0], this.coord[1]);
+		this.entity.setColor(this.type.color);
+		this.entity.setSize(1, this.type.height, 1);
+		this.entity.setModel(this.type.model);
+		this.entity.setDirection([0, 0]);
+		
+		if (type.typeId == 10 || type.typeId == 1) {
+			if (type.typeId == 10) {
+				App.map.groundEntity.merge(this.entity, this.coord);
+			}
+			if (type.typeId == 1) {
+				App.map.wallsEntity.merge(this.entity, this.coord);
+			}
+			this.entity.mesh.geometry.dispose();
+			this.entity.mesh.material.dispose();
+			this.entity.dispose();
+			this.entity = null;
+		}
 	}
 	
 	chooseBonus() {
@@ -81,14 +94,19 @@ class Bloc extends Entity{
 		if (bonus === null) {
 			return false;
 		}
-		bonus.setBlocPosition(this.blocPosition[0], this.blocPosition[1]);
+		bonus.setBlocPosition(this.coord[0], this.coord[1]);
 		App.map.addBonus(bonus);
 	}
 	
 	destroy() {
-		App.map.removeBloc(this.blocPosition[0], this.blocPosition[1]);
+		App.map.removeBloc(this.coord[0], this.coord[1]);
 		this.dropBonus();
 		this.dispose();
 	}
 	
+	dispose() {
+		if (this.entity) {
+			this.entity.dispose();
+		}
+	}
 }
