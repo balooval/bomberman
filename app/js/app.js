@@ -103,6 +103,7 @@ var App = (function(_app) {
     }
 	
 	function start() {
+		App.Sound.init();
 		App.UI.init();
 		App.Genetic.init();
 		Input.Keyboard.evt.listen('ON_KEY_DOWN_68', App, App.Persona.printStored); // "D", debug
