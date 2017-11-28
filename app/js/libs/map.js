@@ -157,7 +157,6 @@ class Map {
 		this.gridDangers = this.gridDangers.map(col => col.map(bloc => 0));
 		this.entities.bombs.map(b => this.addDanger(b.blocPosition));
 		this.frameDangersUpdate = Renderer.getCurFrame() + 30;
-		// console.log('calcDangers', this.frameDangersUpdate);
 		Renderer.evt.listen('RENDER_FRAME_' + this.frameDangersUpdate, this, this.calcDangers);
 	}
 	
@@ -220,14 +219,12 @@ class Map {
 				var bloc = null;
 				if (datas[y][x] == 'P') {
 					this.startBlocs.push([x, y]);
-					// datas[y][x] = ' ';
 					bloc = this.createBloc('ground', x, y);
 				}
 				if (datas[y][x] == 'X') {
 					bloc = this.createBloc('core', x, y);
 				} else if (datas[y][x] == 'O') {
 					bloc = this.createBloc('basic', x, y);
-					// bloc = this.createBloc('ground', x, y);
 				} else if (datas[y][x] == ' ') {
 					bloc = this.createBloc('ground', x, y);
 				}

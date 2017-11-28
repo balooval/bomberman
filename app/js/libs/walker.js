@@ -33,7 +33,6 @@ class Walker extends Entity{
 	}
 	
 	switchFloating() {
-		// console.log('switchFloating');
 		var nextFloat = this.floatTarget.pop();
 		this.floatTarget.unshift(nextFloat);
 		this.tween.setTargetValue(nextFloat, 40);
@@ -119,11 +118,8 @@ class Walker extends Entity{
 		}
 		this.position = [nextPos[0], nextPos[1]];
 		this.updatePosition();
-		
-		
 		var angle = Math.atan2(_dirY, _dirX) * -1;
 		this.setRotation(0, angle, 0);
-		
 		return true;
 	}
 	

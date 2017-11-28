@@ -59,7 +59,6 @@ class BaseEntity {
 	}
 	
 	setLayer(_layer) {
-		// this.mesh.position.y = _layer;
 		this.altitude = _layer;
 	}
 	

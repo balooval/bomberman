@@ -19,7 +19,6 @@ class Bomb extends Entity{
 		super(material);
 		this.setLayer(Renderer.layers.hazard);
 		this.setModel('bomb');
-		// this.setColor(0x03001b);
 		this.setRotation(0, Math.random() * 3, 0);
 		this.timeToLive = 120;
 		this.explodeFrame = 0;
@@ -100,24 +99,17 @@ class Bomb extends Entity{
 			return false;
 		}
 		App.Sound.playOne(Bomb.getSounds());
-		
-		// this.addBlast();
 		App.map.removeEntity('bombs', this);
 		var rays = Ray.getRayCast(this.blocPosition, this.damageBlocsDistance);
 		var walkerHited = this.getEntitiesHited('walkers', rays);
 		walkerHited.forEach(w => w.takeDamage());
-		
 		this.addFire(rays);
-		
 		var blocsHited = rays.map(r => r.impactedBloc).filter(b => b !== null).filter(b => b.type.destoyable);
 		blocsHited.forEach(b => App.map.destroyBloc(b));
-		
 		var bonusHited = this.getEntitiesHited('bonus', rays);
 		bonusHited.forEach(b => b.dispose());
-		
 		var bombsHited = this.getEntitiesHited('bombs', rays).filter(b => b !== this);
 		bombsHited.forEach(b => b.explode());
-		
 		App.map.onBombExplode(this);
 		this.dispose();
 	}
@@ -142,7 +134,6 @@ class Bomb extends Entity{
 			[0, 1], 
 			[0, -1], 
 		].map(o => [o[0] * 0.3, o[1] * 0.3]);
-		
 		Ray.parseRays(_rays, (x, y) => {
 			var fire;
 			offset.forEach(o => {
