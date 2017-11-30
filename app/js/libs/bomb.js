@@ -20,11 +20,12 @@ class Bomb extends Entity{
 		this.setLayer(Renderer.layers.hazard);
 		this.setModel('bomb');
 		this.setRotation(0, Math.random() * 3, 0);
-		this.timeToLive = 120;
+		this.timeToLive = 240;
 		this.explodeFrame = 0;
 		this.damageBlocsDistance = _flameSize;
 		this.speed = [0, 0];
-		this.scalesTarget = [1.3, 1.9];
+		this.scalesTarget = [1.2, 1.5];
+		this.scaleFactor = 0.8;
 		this.tween = new Tween(1);
 		this.tween.evt.listen('END', this, this.switchScale);
 		this.switchScale();
@@ -42,6 +43,7 @@ class Bomb extends Entity{
 		var nextScale = this.scalesTarget.pop();
 		this.scalesTarget.unshift(nextScale);
 		this.tween.setTargetValue(nextScale, 20 / this.scaleFactor, 'inOutQuart');
+		this.scaleFactor += 0.1;
 	}
 	
 	eject(_dirX, _dirY) {

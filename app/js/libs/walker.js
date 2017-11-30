@@ -7,7 +7,7 @@ class Walker extends Entity{
 			map : App.Assets.Textures.get('walker'),
 			color : 0xffffff, 
 			metalness : 0.0, 
-			roughness : 0.9, 
+			roughness : 0.3, 
 		});
 		super(material, new THREE.SphereBufferGeometry(2, 8, 8 ));
 		this.setLayer(Renderer.layers.player);
@@ -25,7 +25,9 @@ class Walker extends Entity{
 		this.bombCapacity = 5;
 		this.bombFlameSize = 2;
 		this.pushBomb = this.doNothing;
-		this.floatTarget = [0, 0.6];
+		this.floatTarget = [0, 0.8];
+		this.floatSpeed = [14, 20];
+		this.floatEase = ['inCubic', 'outCubic'];
 		this.tween = new Tween(0);
 		this.tween.evt.listen('END', this, this.switchFloating);
 		this.switchFloating();
@@ -33,6 +35,10 @@ class Walker extends Entity{
 	}
 	
 	switchFloating() {
+		var nextEase = this.floatEase.pop();
+		this.floatEase.unshift(nextEase);
+		var nextSpeed = this.floatSpeed.pop();
+		this.floatSpeed.unshift(nextSpeed);
 		var nextFloat = this.floatTarget.pop();
 		this.floatTarget.unshift(nextFloat);
 		this.tween.setTargetValue(nextFloat, nextSpeed, nextEase);
