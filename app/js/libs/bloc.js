@@ -50,7 +50,7 @@ class Bloc{
 		});
 		this.entity = new Entity(material);
 		this.type = type;
-		if (type.typeId == 1) {
+		if (type.typeId > 0) {
 			var angle = Math.PI / 2;
 			var nb = Math.random() * 4
 			var rot = angle * Math.floor(nb);
