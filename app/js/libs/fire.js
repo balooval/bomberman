@@ -9,7 +9,7 @@ class Fire extends Sprite{
 		this.timeToLive = 60;
 		this.disposeFrame = 0;
 		this.setTexture('fire');
-		this.tween = new App.Animation.Tween(1);
+		this.tween = new Tween(1);
 		// this.material.blending = THREE.AdditiveBlending;
 		// this.material.blending = THREE.MultiplyBlending;
 		this.init();

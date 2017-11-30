@@ -25,7 +25,7 @@ class Bomb extends Entity{
 		this.damageBlocsDistance = _flameSize;
 		this.speed = [0, 0];
 		this.scalesTarget = [1.3, 1.9];
-		this.tween = new App.Animation.Tween(1);
+		this.tween = new Tween(1);
 		this.tween.evt.listen('END', this, this.switchScale);
 		this.switchScale();
 		this.moving = false;
@@ -41,7 +41,7 @@ class Bomb extends Entity{
 	switchScale() {
 		var nextScale = this.scalesTarget.pop();
 		this.scalesTarget.unshift(nextScale);
-		this.tween.setTargetValue(nextScale, 30);
+		this.tween.setTargetValue(nextScale, 20 / this.scaleFactor, 'inOutQuart');
 	}
 	
 	eject(_dirX, _dirY) {

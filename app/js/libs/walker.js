@@ -26,7 +26,7 @@ class Walker extends Entity{
 		this.bombFlameSize = 2;
 		this.pushBomb = this.doNothing;
 		this.floatTarget = [0, 0.6];
-		this.tween = new App.Animation.Tween(0);
+		this.tween = new Tween(0);
 		this.tween.evt.listen('END', this, this.switchFloating);
 		this.switchFloating();
 		Renderer.evt.listen('RENDER', this, this.onRender);
@@ -35,7 +35,7 @@ class Walker extends Entity{
 	switchFloating() {
 		var nextFloat = this.floatTarget.pop();
 		this.floatTarget.unshift(nextFloat);
-		this.tween.setTargetValue(nextFloat, 40);
+		this.tween.setTargetValue(nextFloat, nextSpeed, nextEase);
 	}
 	
 	onRender(_evt) {
