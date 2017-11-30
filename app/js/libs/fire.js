@@ -10,7 +10,7 @@ class Fire extends Sprite{
 		this.disposeFrame = 0;
 		this.setTexture('fire');
 		this.tween = new Tween(1);
-		// this.material.blending = THREE.AdditiveBlending;
+		this.material.blending = THREE.AdditiveBlending;
 		// this.material.blending = THREE.MultiplyBlending;
 		this.init();
 	}
