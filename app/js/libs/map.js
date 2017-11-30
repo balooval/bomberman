@@ -40,7 +40,6 @@ class Map {
 	loadLevel() {
 		this.initGrids();
 		this.frameDangersUpdate = Renderer.getCurFrame() + 30;
-		console.log('loadLevel', this.frameDangersUpdate);
 		Renderer.evt.listen('RENDER_FRAME_' + this.frameDangersUpdate, this, this.calcDangers);
 	}
 	
