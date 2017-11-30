@@ -10,6 +10,10 @@ var App = (function(_app){
 	
 	_app.Ressources.Models = [
 		{
+			id : 'buisson', 
+			url : modelsPath + 'buisson.json', 
+		}, 
+		{
 			id : 'bloc-soft', 
 			url : modelsPath + 'bloc-2.json', 
 		}, 
@@ -31,7 +35,8 @@ var App = (function(_app){
 		}, 
 		{
 			id : 'walker', 
-			url : modelsPath + 'walker.json', 
+			// url : modelsPath + 'walker.json', 
+			url : modelsPath + 'lapin.json', 
 		}, 
 		/*
 		{
@@ -47,6 +52,14 @@ var App = (function(_app){
 			url : texturesPath + 'default.png', 
 		}, 
 		{
+			id : 'buisson', 
+			url : texturesPath + 'buisson.png', 
+		}, 
+		{
+			id : 'grass', 
+			url : texturesPath + 'grass.png', 
+		}, 
+		{
 			id : 'rock', 
 			url : texturesPath + 'rock.png', 
 		}, 
@@ -56,7 +69,7 @@ var App = (function(_app){
 		}, 
 		{
 			id : 'walker', 
-			url : texturesPath + 'walker.png', 
+			url : texturesPath + 'lapin.png', 
 		}, 
 		{
 			id : 'bloc-2', 
