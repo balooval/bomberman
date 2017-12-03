@@ -7,6 +7,7 @@ class Bonus extends Entity{
 		this.type = this.chooseType();
 		this.setLayer(Renderer.layers.items);
 		this.setColor(0xffffff);
+		this.setModel('bonus');
 		this.setTexture(this.type.texture);
 		var size = 0.7;
 		this.setSize(size, size, size);

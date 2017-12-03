@@ -10,6 +10,15 @@ var App = (function(_app){
 	
 	_app.Ressources.Models = [
 		{
+			id : 'bloc', 
+			url : modelsPath + 'bloc-base.json', 
+		},
+		
+		{
+			id : 'bonus', 
+			url : modelsPath + 'bonus.json', 
+		}, 
+		{
 			id : 'buisson', 
 			url : modelsPath + 'buisson.json', 
 		}, 
@@ -17,10 +26,6 @@ var App = (function(_app){
 			id : 'bloc-soft', 
 			url : modelsPath + 'bloc-2.json', 
 		}, 
-		{
-			id : 'bloc', 
-			url : modelsPath + 'bloc-base.json', 
-		},
 		{
 			id : 'rock', 
 			url : modelsPath + 'rock.json', 
@@ -35,15 +40,9 @@ var App = (function(_app){
 		}, 
 		{
 			id : 'walker', 
-			// url : modelsPath + 'walker.json', 
 			url : modelsPath + 'lapin.json', 
 		}, 
-		/*
-		{
-			id : 'bloc', 
-			url : modelsPath + 'bloc.json', 
-		}, 
-		*/
+		
 	];
 	
 	_app.Ressources.Textures = [
