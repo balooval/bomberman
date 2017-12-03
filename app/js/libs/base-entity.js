@@ -113,7 +113,7 @@ class BaseEntity {
 		this.evt.fireEvent('CHANGED_BLOC');
 	}
 	
-	onRender(_evt) {
+	onRender(_frameId) {
 		
 	}
 	

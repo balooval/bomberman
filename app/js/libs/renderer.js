@@ -70,7 +70,7 @@ var Renderer = (function(){
 		
 		renderNextFrame : function() {
 			frameId ++;
-			api.evt.fireEvent('RENDER');
+			api.evt.fireEvent('RENDER', frameId);
 			api.evt.fireEvent('RENDER_FRAME_' + frameId);
 			myRenderer.render(scene, camera);
 		}, 

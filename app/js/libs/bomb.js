@@ -33,9 +33,9 @@ class Bomb extends Entity{
 		Renderer.evt.listen('RENDER', this, this.onRender);
 	}
 	
-	onRender(_evt) {
-		super.onRender(_evt);
-		var scale = this.tween.getValueAtTime(Renderer.getCurFrame());
+	onRender(_frameId) {
+		super.onRender(_frameId);
+		var scale = this.tween.getValueAtTime(_frameId);
 		this.setSize(scale, scale, scale);
 	}
 	

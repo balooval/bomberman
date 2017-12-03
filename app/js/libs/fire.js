@@ -35,9 +35,9 @@ class Fire extends Sprite{
 		Renderer.evt.listen('RENDER_FRAME_' + this.disposeFrame, this, this.dispose);
 	}
 	
-	onRender(_evt) {
-		super.onRender(_evt);
-		var tweenValue = this.tween.getValueAtTime(Renderer.getCurFrame());
+	onRender(_frameId) {
+		super.onRender(_frameId);
+		var tweenValue = this.tween.getValueAtTime(_frameId);
 		this.material.opacity = tweenValue;
 	}
 	
