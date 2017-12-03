@@ -2,8 +2,8 @@
 
 class IncentiveSafe extends Incentive {
 	
-	constructor(_bot) {
-		super(_bot);
+	constructor(_bot, _factor) {
+		super(_bot, _factor);
 		this.name = 'Incentive Safe';
 		this.safeJourney = null;
 	}

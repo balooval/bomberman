@@ -2,8 +2,8 @@
 
 class IncentiveBonus extends Incentive {
 	
-	constructor(_bot) {
-		super(_bot);
+	constructor(_bot, _factor) {
+		super(_bot, _factor);
 		this.name = 'Incentive Bonus';
 		this.blocTypeSearched = 2;
 		this.bonusJourney = null;
