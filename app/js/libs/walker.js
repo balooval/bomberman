@@ -25,30 +25,70 @@ class Walker extends Entity{
 		this.bombCapacity = 5;
 		this.bombFlameSize = 2;
 		this.pushBomb = this.doNothing;
-		this.floatTarget = [0, 0.8];
-		this.floatSpeed = [14, 20];
-		this.floatEase = ['inCubic', 'outCubic'];
-		this.tween = new Tween(0);
-		this.tween.evt.listen('END', this, this.switchFloating);
-		this.switchFloating();
+		this.moving = false;
+		this.movingAngle = 0;
+		
+		this.puppet = new Puppet();
+		var animeIdle = new Animation();
+		animeIdle.addTimeline(
+			'altitude', 
+			[-0.2, 0.2], 
+			[60, 60], 
+			['linear', 'linear']
+		);
+		animeIdle.addTimeline(
+			'rotation', 
+			[-0.1, 0.1], 
+			[60, 60],  
+			['linear', 'linear']
+		);
+		this.puppet.addAnimation('idle', animeIdle);
+		var animeJump = new Animation();
+		animeJump.addTimeline(
+			'altitude', 
+			[0, 3], 
+			[12, 16], 
+			['inCubic', 'outCubic']
+		);
+		animeJump.addTimeline(
+			'rotation', 
+			[-0.8, 0.8], 
+			[12, 16], 
+			['inCubic', 'outCubic']
+		);
+		this.puppet.addAnimation('jump', animeJump);
+		this.puppet.play('idle');
+		
 		Renderer.evt.listen('RENDER', this, this.onRender);
+		this.evt.listen('MOVE_START', this, this.onMoveStart);
+		this.evt.listen('MOVE_STOP', this, this.onMoveStop);
+	}
+
+	onRender(_frameId) {
+		super.onRender(_frameId);
+		this.processMovement();
+		var puppetValues = this.puppet.getValues(_frameId);
+		this.setAltitude(puppetValues.altitude);
+		// this.mesh.rotateZ(puppetValues.rotation);
+		// this.setRotation(puppetValues.rotation, this.movingAngle, 0);
 	}
 	
-	switchFloating() {
-		var nextEase = this.floatEase.pop();
-		this.floatEase.unshift(nextEase);
-		var nextSpeed = this.floatSpeed.pop();
-		this.floatSpeed.unshift(nextSpeed);
-		var nextFloat = this.floatTarget.pop();
-		this.floatTarget.unshift(nextFloat);
-		this.tween.setTargetValue(nextFloat, nextSpeed, nextEase);
+	processMovement() {
+		var hasMoved = this.move(this.speed[0] / this.speedReducer, this.speed[1] / this.speedReducer);
+		if (hasMoved && !this.moving) {
+			this.evt.fireEvent('MOVE_START');
+		} else if (!hasMoved && this.moving) {
+			this.evt.fireEvent('MOVE_STOP');
+		}
+		this.moving = hasMoved;
 	}
 	
-	onRender(_evt) {
-		super.onRender(_evt);
-		this.move(this.speed[0] / this.speedReducer, this.speed[1] / this.speedReducer);
-		var alt = this.tween.getValueAtTime(Renderer.getCurFrame());
-		this.setAltitude(alt);
+	onMoveStart() {
+		this.puppet.play('jump');
+	}
+	
+	onMoveStop() {
+		this.puppet.play('idle');
 	}
 	
 	takeDamage() {
@@ -126,6 +166,7 @@ class Walker extends Entity{
 		this.updatePosition();
 		var angle = Math.atan2(_dirY, _dirX) * -1;
 		this.setRotation(0, angle, 0);
+		this.movingAngle = angle;
 		return true;
 	}
 	

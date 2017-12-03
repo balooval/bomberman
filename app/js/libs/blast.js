@@ -13,7 +13,7 @@ class Blast extends Entity{
 		this.material.blending = THREE.AdditiveBlending;
 		// this.material.blending = THREE.MultiplyBlending;
 		this.setModel('blast');
-		this.tween = new App.Animation.Tween(0);
+		this.tween = new Tween(0);
 	}
 	
 	rebuild() {

@@ -7,7 +7,7 @@ class Tween {
 		this.valueEnd = 0;
 		this.timeStart = -1;
 		this.timeEnd = -1;
-		this.timeTotal = -1;
+		this.duration = -1;
 		this.delta = 0;
 		this.running = false;
 		this.easeFunction = null;
@@ -52,21 +52,17 @@ class Tween {
 		this.valueEnd = _value;
 		this.easeFunction = _easeFn ? this.easing[_easeFn] : this.easing.outCubic;
 		this.delta = this.valueEnd - this.valueStart;
-		this.timeStart = curTime;
-		this.timeEnd = curTime + _duration;
-		this.timeTotal = this.timeEnd - this.timeStart;
+		this.timeStart = Renderer.getCurFrame();
+		this.duration = _duration;
+		this.timeEnd = this.timeStart + this.duration;
 		this.running = true;
 	}
 	
 	getValueAtTime(_time) {
-		this.timeTotal = this.timeEnd - this.timeStart;
 		var timeElapsed = _time - this.timeStart;
-		var timePrct = (timeElapsed / this.timeTotal);
+		var timePrct = (timeElapsed / this.duration);
 		var delta = this.valueEnd - this.valueStart;
-		// timePrct = this.easeFunction(timePrct);
-		// this.value = this.valueStart + (this.delta * (timePrct));
 		this.value = this.valueStart + (this.delta * this.easeFunction(timePrct));
-		// this.value = this.valueStart + this.easeFunction(timePrct);
 		if( timePrct >= 1 ){
 			this.reachTargetValue();
 		}
@@ -77,8 +73,8 @@ class Tween {
 		this.value = this.valueEnd;
 		this.valueStart = this.valueEnd;
 		this.timeEnd = -1;
-		this.timeTotal = -1;
+		this.duration = -1;
 		this.running = false;
-		this.evt.fireEvent( "END" );
+		this.evt.fireEvent('END', this);
 	}
 }
