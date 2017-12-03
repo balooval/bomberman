@@ -17,15 +17,25 @@ class Human extends Player {
 	}
 	
 	bindInputs(_keyMap) {
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.DROP, this, this.onPressDrop);
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.LEFT, this, this.onPressLeft);
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.RIGHT, this, this.onPressRight);
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.DOWN, this, this.onPressDown);
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.UP, this, this.onPressUp);
-		Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.LEFT, this, this.onReleaseLeft);
-		Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.RIGHT, this, this.onReleaseRight);
-		Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.DOWN, this, this.onReleaseDown);
-		Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.UP, this, this.onReleaseUp);
+		App.Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.DROP, this, this.onPressDrop);
+		App.Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.LEFT, this, this.onPressLeft);
+		App.Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.RIGHT, this, this.onPressRight);
+		App.Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.DOWN, this, this.onPressDown);
+		App.Input.Keyboard.evt.listen('ON_KEY_DOWN_' + _keyMap.UP, this, this.onPressUp);
+		App.Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.LEFT, this, this.onReleaseLeft);
+		App.Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.RIGHT, this, this.onReleaseRight);
+		App.Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.DOWN, this, this.onReleaseDown);
+		App.Input.Keyboard.evt.listen('ON_KEY_UP_' + _keyMap.UP, this, this.onReleaseUp);
+		
+		App.Input.Gamepad.evt.listen('AXE_PRESS_1_1', this, this.onPressUp);
+		App.Input.Gamepad.evt.listen('AXE_RELEASE_1_1', this, this.onReleaseUp);
+		App.Input.Gamepad.evt.listen('AXE_PRESS_1_0', this, this.onPressDown);
+		App.Input.Gamepad.evt.listen('AXE_RELEASE_1_0', this, this.onReleaseDown);
+		App.Input.Gamepad.evt.listen('AXE_PRESS_0_1', this, this.onPressLeft);
+		App.Input.Gamepad.evt.listen('AXE_RELEASE_0_1', this, this.onReleaseLeft);
+		App.Input.Gamepad.evt.listen('AXE_PRESS_0_0', this, this.onPressRight);
+		App.Input.Gamepad.evt.listen('AXE_RELEASE_0_0', this, this.onReleaseRight);
+		App.Input.Gamepad.evt.listen('BUTTON_PRESS_0', this, this.onPressDrop);
 	}
 
 }

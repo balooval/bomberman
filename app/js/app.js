@@ -103,14 +103,16 @@ var App = (function(_app) {
     }
 	
 	function start() {
+		Renderer.init(document.getElementById('main'));
 		App.Sound.init();
+		App.Input.init();
 		App.UI.init();
 		App.Genetic.init();
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_68', App, App.Persona.printStored); // "D", debug
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_75', App, App.killRandomPlayer);
-		Input.Keyboard.evt.listen('ON_KEY_DOWN_66', App, App.addBot);
-		Input.Keyboard.evt.listen('ON_KEY_UP_80', App, App.onKeyPause);
-		Renderer.init(document.getElementById('main'));
+		App.Input.Keyboard.evt.listen('ON_KEY_DOWN_68', App, App.Persona.printStored); // "D", debug
+		App.Input.Keyboard.evt.listen('ON_KEY_DOWN_75', App, App.killRandomPlayer);
+		App.Input.Keyboard.evt.listen('ON_KEY_DOWN_66', App, App.addBot);
+		App.Input.Keyboard.evt.listen('ON_KEY_UP_80', App, App.onKeyPause);
+		App.Input.Gamepad.evt.listen('BUTTON_PRESS_8', App, App.onKeyPause);
 		App.Fx.Lights.init();
 		Renderer.play();
 		App.map = new Map();

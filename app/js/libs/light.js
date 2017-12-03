@@ -39,10 +39,12 @@ var App = (function(_app){
 			lgMain.shadow.camera.left = lgMain.shadow.camera.bottom = -50;
 			lgMain.shadow.camera.right = lgMain.shadow.camera.top = 50;
 			
-			Input.Keyboard.evt.listen('ON_KEY_DOWN_37', api, api.onPressLeft);
-			Input.Keyboard.evt.listen('ON_KEY_DOWN_39', api, api.onPressRight);
-			Input.Keyboard.evt.listen('ON_KEY_DOWN_40', api, api.onPressDown);
-			Input.Keyboard.evt.listen('ON_KEY_DOWN_38', api, api.onPressUp);
+			/*
+			App.Input.Keyboard.evt.listen('ON_KEY_DOWN_37', api, api.onPressLeft);
+			App.Input.Keyboard.evt.listen('ON_KEY_DOWN_39', api, api.onPressRight);
+			App.Input.Keyboard.evt.listen('ON_KEY_DOWN_40', api, api.onPressDown);
+			App.Input.Keyboard.evt.listen('ON_KEY_DOWN_38', api, api.onPressUp);
+			*/
 		}, 
 		
 		start : function() {

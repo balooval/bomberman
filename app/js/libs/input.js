@@ -1,15 +1,90 @@
 'use strict';
 
-var Input = (function(){
+var App = (function(_app){
 	var api = {
-		
+		init : function() {
+			App.Input.Keyboard.init();
+			App.Input.Gamepad.init();
+		}, 
 	};
+	
+	_app.Input = api;
+	return _app;
+})(App || {});
+
+	
+App.Input.Gamepad = (function(){
+	var gamepads;
+	
+	var axes = [];
+	var buttons = [];
+	
+	var api = {
+		evt : null, 
+		
+		init : function() {
+			api.evt = new Evt();
+			gamepads = navigator.getGamepads();
+			console.log('gamepads', gamepads);
+			window.addEventListener("gamepadconnected", function(e) {
+				console.log('gamepadconnected', e);
+				gamepads = navigator.getGamepads();
+			});
+			window.addEventListener("gamepaddisconnected", function(e) {
+				console.log("Gamepad disconnected from index %d: %s",
+				e.gamepad.index, e.gamepad.id);
+			});
+			initInputs(navigator.getGamepads());
+			Renderer.evt.listen('RENDER', api, api.onRender);
+		}, 
+		
+		onRender : function() {
+			updateAxes(navigator.getGamepads()[0].axes);
+			updateButtons(navigator.getGamepads()[0].buttons);
+			
+		}, 
+	};
+	
+	function updateButtons(_buttons) {
+		var buttonState;
+		_buttons.forEach((b, i) => {
+			if (buttons[i] != b.pressed) {
+				buttons[i] = b.pressed;
+				buttonState = b.pressed ? 'PRESS' : 'RELEASE';
+				api.evt.fireEvent('BUTTON_' + i, b.pressed);
+				api.evt.fireEvent('BUTTON_' + buttonState + '_' + i, b.pressed);
+			}
+		});
+	}
+	
+	function updateAxes(_axes) {
+		var axeState;
+		var state;
+		_axes.forEach((a, i) => {
+			state = a > 0.5 ? true : false;
+			if (axes[i][0] != state) {
+				axes[i][0] = state;
+				axeState = state ? 'PRESS' : 'RELEASE';
+				api.evt.fireEvent('AXE_' + axeState + '_' + i + '_0', axeState);
+			}
+			state = a < -0.5 ? true : false;
+			if (axes[i][1] != state) {
+				axes[i][1] = state;
+				axeState = state ? 'PRESS' : 'RELEASE';
+				api.evt.fireEvent('AXE_' + axeState + '_' + i + '_1', axeState);
+			}
+		});
+	}
+	
+	function initInputs(_gamepads) {
+		axes = _gamepads[0].axes.map(a => [0, 0]);
+		buttons = _gamepads[0].buttons.map(b => false);
+	}
 	
 	return api;
 })();
 
-	
-Input.Keyboard = (function(){
+App.Input.Keyboard = (function(){
 	var majActiv = false;
 	var ctrlActiv = false;
 	var keyState = {};
@@ -18,6 +93,11 @@ Input.Keyboard = (function(){
 		evt : new Evt(), 
 		lastKeyDown : -1, 
 		lastKeyUp : -1, 
+		
+		init : function() {
+			document.body.addEventListener('keydown', api.onKeyDown);
+			document.body.addEventListener('keyup', api.onKeyUp);
+		}, 
 		
 		onKeyDown : function(event) {
 			if (document.activeElement.type != undefined) {
