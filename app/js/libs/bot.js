@@ -21,7 +21,6 @@ class Bot extends Player {
 	
 	kill() {
 		var remainingPlayersNb = App.getPlayerList().length;
-		// console.log('remainingPlayersNb', remainingPlayersNb);
 		App.Persona.storePersona(this.persona, 4 - remainingPlayersNb);
 		super.kill();
 	}
@@ -39,18 +38,6 @@ class Bot extends Player {
 		if (bestIncentive) {
 			bestIncentive.tryProposition();
 		}
-	}
-	
-	getPathToBonus() {
-		var bonus = App.map.getSomeBonus();
-		if (bonus === null) {
-			return this.getPathToHuman();
-		}
-		return App.map.getPathCoord(this.walker.blocPosition, bonus.blocPosition);
-	}
-	
-	getPathToHuman() {
-		return App.map.getPathCoord(this.walker.blocPosition, App.getPlayer(this.walker).walker.blocPosition);
 	}
 	
 	getNextBlocDest() {
