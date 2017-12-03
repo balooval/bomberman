@@ -23,8 +23,16 @@ class Player {
 		return type[_id];
 	}
 	
+	static generateUid() {
+		var uid = '';
+		for (var i = 0; i < 4; i ++) {
+			uid += Math.floor((1 + Math.random()) * 0x10000).toString(16);
+		}
+		return uid;
+	}
+	
 	constructor(_walker, _id) {
-		this.uid = this.generateUid();
+		this.uid = Player.generateUid();
 		this.walker = _walker;
 		var type = Player.getType(_id);
 		this.name = type.name;
@@ -36,14 +44,6 @@ class Player {
 			up : 0, 
 			down : 0, 
 		}
-	}
-	
-	generateUid() {
-		var uid = '';
-		for (var i = 0; i < 4; i ++) {
-			uid += Math.floor((1 + Math.random()) * 0x10000).toString(16);
-		}
-		return uid;
 	}
 	
 	onWalkerIsDamaged() {
